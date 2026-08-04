@@ -237,11 +237,21 @@ const Ico = {
     <path d="M18 9.5a6 6 0 1 0-12 0c0 5.5-2.2 7.5-2.2 7.5h16.4S18 15 18 9.5" />
     <path d="M13.6 20a1.9 1.9 0 0 1-3.2 0" />
   </Svg>,
-  /* 스와이프 안내 — 손 */
-  hand: <Svg>
-    <path d="M18 11V6a2 2 0 0 0-4 0v5M14 10V4a2 2 0 0 0-4 0v7M10 10.5V6a2 2 0 0 0-4 0v8" />
-    <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2a8 8 0 0 1-8-8v-1a2 2 0 1 1 4 0" />
-  </Svg>,
+  /* 스와이프 안내 — 손 위에 좌우 화살표 */
+  swipe: (
+    <svg viewBox="0 0 34 30" width="1em" height="1em" aria-hidden="true"
+      fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      {/* 좌우 화살표 */}
+      <path d="M6 5h22" />
+      <path d="m9 2-3 3 3 3" />
+      <path d="m25 2 3 3-3 3" />
+      {/* 손 */}
+      <g transform="translate(6.5 8.5) scale(0.88)">
+        <path d="M18 11V6a2 2 0 0 0-4 0v5M14 10V4a2 2 0 0 0-4 0v7M10 10.5V6a2 2 0 0 0-4 0v8" />
+        <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2a8 8 0 0 1-8-8v-1a2 2 0 1 1 4 0" />
+      </g>
+    </svg>
+  ),
   /* 메인으로 — 집 */
   home: <Svg><path d="M4 10.8 12 4l8 6.8V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z" /></Svg>,
   /* 상세 보기 — 클립보드 */
@@ -271,6 +281,23 @@ const Ico = {
   boltSmall: <Svg filled><path d="M13 2 4 14h7l-1 8 9-12h-7z" /></Svg>,
   pause: <Svg filled><rect x="7" y="4" width="3.5" height="16" rx="1" /><rect x="13.5" y="4" width="3.5" height="16" rx="1" /></Svg>,
 };
+
+/* 사이드 패널의 미니 스테이션 — 실물 형태 + 슬롯별 충전 상태 표시 */
+const StationGlyph = ({ slots = [] }) => (
+  <svg className="sg" viewBox="0 0 62 74" aria-hidden="true">
+    <path className="sg__top" d="M9 12 14 5.5h34L53 12Z" />
+    <rect className="sg__body" x="9" y="12" width="44" height="56" rx="4" />
+    <rect className="sg__label" x="14" y="15.5" width="34" height="5" rx="2" />
+    <rect className="sg__bay" x="13.5" y="25" width="15" height="35" rx="3" />
+    <rect className="sg__bay" x="33.5" y="25" width="15" height="35" rx="3" />
+    {[18.5, 38.5].map((x, i) => (
+      <g className="sg__batt" data-mode={slots[i]?.mode ?? "EMPTY"} key={x}>
+        <rect x={x} y="31" width="5" height="21.5" rx="1.6" />
+        <rect x={x + 1.3} y="28.8" width="2.4" height="2.8" rx=".8" />
+      </g>
+    ))}
+  </svg>
+);
 
 /* ============================================================================
    작은 컴포넌트들
@@ -608,14 +635,14 @@ export default function ChargeDashboard({ onGoDetail, onGoMain }) {
                   onClick={() => setIdx(i)}
                   title={`${s.name} 보기`}
                 >
-                  <span className="ministation__box"><i /><i /></span>
+                  <span className="ministation__box"><StationGlyph slots={s.slots} /></span>
                   <span className="ministation__name">{s.name}</span>
                 </button>
               ))}
             </div>
 
             <div className="side__hint">
-              {Ico.hand}
+              {Ico.swipe}
               <div>
                 좌우로 밀어<br />다른 스테이션 보기
                 <div className="side__count">{idx + 1} / {stations.length}</div>

@@ -47,7 +47,6 @@
 	--fs-md: clamp(13px, min(1.25vw, 2.22vh), 24px); /* 슬롯 이름, 헤더 제목 */
 	--fs-sm: clamp(11px, min(0.99vw, 1.76vh), 19px); /* CAN 라벨, 탭 */
 	--fs-xs: clamp(10px, min(0.83vw, 1.48vh), 16px); /* 배지, 요약 라벨 */
-	--fs-tab-add: clamp(18px, min(1.56vw, 2.78vh), 34px);
 	--fs-2xs: clamp(9px, min(0.73vw, 1.3vh), 14px); /* 날씨 보조, 미니 스테이션 */
 
 	/* ── 간격 ── */
@@ -766,7 +765,7 @@
 	scroll-behavior: smooth;
 	scrollbar-width: none; /* Firefox */
 	-ms-overflow-style: none; /* 구형 Edge */
-	padding-bottom: var(--sp-1);
+	padding: var(--sp-4) 0 var(--sp-1);
 	/* 좌우 끝을 흐리게 해서 "더 있다"는 걸 알립니다 */
 	-webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--sp-2), #000 calc(100% - var(--sp-4)), transparent 100%);
 	mask-image: linear-gradient(90deg, transparent 0, #000 var(--sp-2), #000 calc(100% - var(--sp-4)), transparent 100%);
@@ -785,40 +784,112 @@
 	text-align: center;
 	font-family: inherit;
 }
+
 .ministation__box {
-	width: clamp(34px, 2.6vw, 50px);
-	height: clamp(40px, 3.02vw, 58px);
-	margin: 0 auto;
-	border-radius: var(--r-sm);
-	border: 1.5px solid var(--line2);
-	background: linear-gradient(160deg, #12263f, #0a1526);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 4px;
-}
-.ministation__box i {
+	position: relative;
 	display: block;
-	width: clamp(5px, 0.42vw, 8px);
-	height: clamp(15px, 1.15vw, 22px);
-	border-radius: 3px;
+	width: clamp(38px, min(3.13vw, 5.56vh), 60px);
+	margin: 0 auto;
+	transform-origin: center bottom;
+	transition: transform 0.22s ease;
+}
+
+/* 선택된 스테이션만 크게 — 아래를 기준으로 커져서 이름 줄이 흔들리지 않습니다 */
+.ministation[aria-current='true'] .ministation__box {
+	transform: scale(1.22);
+}
+
+/* 스테이션끼리 잇는 연결선 (마지막 것 제외).
+   확대된 아이콘 영향을 받지 않도록 버튼 기준으로 그립니다 */
+.ministation {
+	position: relative;
+}
+.ministation:not(:last-child)::after {
+	content: '';
+	position: absolute;
+	top: 42%;
+	left: 100%;
+	width: var(--sp-2);
+	height: 2px;
 	background: var(--cyan);
+	opacity: 0.45;
+}
+
+/* ── 스테이션 그래픽 ──
+   상단면 / 몸통 / 라벨 / 배터리 베이 2구 / 배터리 순서로 겹쳐 그립니다 */
+.sg {
+	width: 100%;
+	height: auto;
+	display: block;
+	overflow: visible;
+}
+.sg__top {
+	fill: #16304f;
+}
+.sg__body {
+	fill: #0d1f38;
+	stroke: var(--line2);
+	stroke-width: 1.2;
+}
+.sg__label {
+	fill: #23456d;
+}
+.sg__bay {
+	fill: #050e1c;
+	stroke: var(--line2);
+	stroke-width: 0.8;
+}
+/* 슬롯별 충전 상태를 배터리 색으로 작게 표시합니다 */
+.sg__batt {
+	fill: var(--muted2);
+	opacity: 0.5;
+	transition:
+		fill 0.3s ease,
+		opacity 0.3s ease;
+}
+.sg__batt[data-mode='CHARGING'] {
+	fill: var(--cyan);
+	opacity: 0.9;
+}
+.sg__batt[data-mode='DONE'] {
+	fill: var(--green);
+	opacity: 0.9;
+}
+.sg__batt[data-mode='IDLE'] {
+	fill: var(--muted);
 	opacity: 0.55;
 }
+/* 미연결 — 빈 윤곽선만 남깁니다 */
+.sg__batt[data-mode='EMPTY'] {
+	fill: none;
+	stroke: var(--line2);
+	stroke-width: 1;
+	opacity: 0.7;
+}
+
+.ministation[aria-current='true'] .sg__top {
+	fill: #1d4370;
+}
+.ministation[aria-current='true'] .sg__body {
+	stroke: var(--cyan);
+	filter: drop-shadow(0 0 6px rgba(55, 169, 255, 0.55));
+}
+.ministation[aria-current='true'] .sg__label {
+	fill: var(--cyan);
+}
+.ministation[aria-current='true'] .sg__bay {
+	stroke: var(--cyan);
+}
+.ministation[aria-current='true'] .sg__batt:not([data-mode='EMPTY']) {
+	opacity: 1;
+	filter: drop-shadow(0 0 4px currentColor);
+}
+
 .ministation__name {
 	font-size: var(--fs-2xs);
 	margin-top: var(--sp-1);
 	white-space: nowrap;
 	color: var(--muted2);
-}
-
-.ministation[aria-current='true'] .ministation__box {
-	border-color: var(--cyan);
-	background: linear-gradient(160deg, #1a3d63, #0a1526);
-	box-shadow: 0 0 16px rgba(55, 169, 255, 0.4);
-}
-.ministation[aria-current='true'] .ministation__box i {
-	opacity: 1;
 }
 .ministation[aria-current='true'] .ministation__name {
 	color: var(--cyan);
@@ -828,6 +899,7 @@
 .side__hint {
 	display: flex;
 	align-items: center;
+	justify-content: center;
 	gap: var(--sp-2);
 	margin-top: auto;
 	padding-top: var(--sp-3);
@@ -888,7 +960,7 @@
 .tab--add {
 	flex: 0 0 auto;
 	min-width: clamp(72px, 6.8vw, 130px);
-	font-size: var(--fs-tab-add);
+	font-size: var(--fs-lg);
 	font-weight: 400;
 	line-height: 1;
 	color: var(--muted2);
@@ -922,7 +994,7 @@
 	cursor: pointer;
 	display: inline-flex;
 	align-items: center;
-	justify-content: space-between;
+	justify-content: center;
 	gap: var(--sp-4);
 }
 .btn__label {
@@ -1069,6 +1141,8 @@
 	.arrow,
 	.batt__fill,
 	.progress__fill,
+	.ministation__box,
+	.sg__batt,
 	.side__strip {
 		transition: none;
 		scroll-behavior: auto;
