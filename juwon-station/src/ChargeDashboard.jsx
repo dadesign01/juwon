@@ -484,10 +484,14 @@ export default function ChargeDashboard({ onGoDetail, onGoMain }) {
   }, [log]);
 
   const station = stations[idx] ?? stations[0];
+  /* 양 끝에서 멈춥니다. 순환시키면 화살표가 항상 활성이라
+     지금 어디쯤인지 알 수 없어서 끝에 도달했는지 감이 안 옵니다. */
   const move = useCallback(
-    (d) => setIdx((i) => (i + d + stations.length) % stations.length),
+    (d) => setIdx((i) => Math.min(stations.length - 1, Math.max(0, i + d))),
     [stations.length]
   );
+  const atFirst = idx === 0;
+  const atLast = idx === stations.length - 1;
 
   /* 방향키로 스테이션 이동 + 검토용 단축키
      Ctrl+Shift+L : API 로그 / Ctrl+Shift+M : 버튼 번호 */
@@ -586,7 +590,7 @@ export default function ChargeDashboard({ onGoDetail, onGoMain }) {
       {/* ── 본문 ── */}
       <div className="kiosk__body" onPointerDown={onPointerDown} onPointerUp={onPointerUp}>
         {/* 1번 — 이전 스테이션 */}
-        <button className="arrow" onClick={() => move(-1)} aria-label="이전 스테이션">
+        <button className="arrow" onClick={() => move(-1)} disabled={atFirst} aria-label="이전 스테이션">
           {showMarkers && <Marker n={1} style={{ bottom: 0, left: "-6px" }} />}‹
         </button>
 
@@ -614,7 +618,7 @@ export default function ChargeDashboard({ onGoDetail, onGoMain }) {
         </section>
 
         {/* 1번 — 다음 스테이션 */}
-        <button className="arrow" onClick={() => move(1)} aria-label="다음 스테이션">
+        <button className="arrow" onClick={() => move(1)} disabled={atLast} aria-label="다음 스테이션">
           {showMarkers && <Marker n={1} style={{ bottom: 0, right: "-6px" }} />}›
         </button>
 

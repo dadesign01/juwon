@@ -331,14 +331,23 @@
 	justify-content: center;
 	font-size: clamp(34px, 3.33vw, 64px);
 	font-weight: 200;
-	color: var(--cyan);
 	cursor: pointer;
 	position: relative;
-	text-shadow: 0 0 20px var(--cyan);
 	user-select: none;
 	background: none;
 	border: none;
 	padding: 0;
+	/* 활성 — 밝은 청록에 발광 */
+	color: var(--cyan);
+	text-shadow: 0 0 20px var(--cyan);
+}
+
+/* 비활성 (양 끝) — 발광을 끄고 어둡게. 더 갈 곳이 없다는 뜻입니다 */
+.arrow:disabled {
+	color: var(--line2);
+	text-shadow: none;
+	opacity: 0.5;
+	cursor: default;
 }
 
 .dash {
@@ -1058,7 +1067,7 @@
 	.kbtn:not(:disabled):hover {
 		filter: brightness(1.12);
 	}
-	.arrow:hover {
+	.arrow:not(:disabled):hover {
 		transform: scale(1.15);
 	}
 }
@@ -1067,7 +1076,7 @@
 		transform 0.12s ease,
 		opacity 0.12s ease;
 }
-.arrow:active {
+.arrow:not(:disabled):active {
 	transform: scale(0.85);
 	opacity: 0.7;
 }
@@ -1148,7 +1157,7 @@
 		scroll-behavior: auto;
 	}
 	.kbtn:not(:disabled):active,
-	.arrow:active {
+	.arrow:not(:disabled):active {
 		transform: none;
 	}
 }
