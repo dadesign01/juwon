@@ -14,7 +14,7 @@ import "./kiosk.css";
      2번 : 하단 탭 (1번과 동일 기능)
      3번 : 메인으로 → 1(초기화면)
      4번 : 슬롯별 충전 시작/중지 (CAN ON/OFF)
-     5번 : 상세 보기
+     5번 : 결제하기 → 6-1(결제-선택)
    ========================================================================== */
 
 const STEPS = ["시작", "인증", "반납", "검사", "충전", "결제", "수령"];
@@ -254,6 +254,12 @@ const Ico = {
   ),
   /* 메인으로 — 집 */
   home: <Svg><path d="M4 10.8 12 4l8 6.8V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z" /></Svg>,
+  /* 결제하기 — 카드 */
+  pay: <Svg>
+    <rect x="2.5" y="5" width="19" height="14" rx="2.5" />
+    <path d="M2.5 10h19" />
+    <path d="M6 14.5h3.5" />
+  </Svg>,
   /* 상세 보기 — 클립보드 */
   detail: <Svg>
     <rect x="5.5" y="4" width="13" height="17" rx="2.5" /><rect x="9" y="2" width="6" height="4" rx="1.4" />
@@ -427,7 +433,7 @@ const Summary = ({ icon, label, value, tone }) => (
 /* ============================================================================
    메인
    ========================================================================== */
-export default function ChargeDashboard({ onGoDetail, onGoMain }) {
+export default function ChargeDashboard({ onGoMain, onGoPayment }) {
   const [stations, setStations] = useState(initialData.stations);
   const [idx, setIdx] = useState(0);
   const [pending, setPending] = useState(null);
@@ -672,19 +678,19 @@ export default function ChargeDashboard({ onGoDetail, onGoMain }) {
         <button className="kbtn tab tab--add" disabled aria-hidden="true">+</button>
       </div>
 
-      {/* ── 하단 액션 (5번 / 3번) ── */}
+      {/* ── 하단 액션 (3번 메인으로 / 5번 결제하기) ── */}
       <div className="actions">
         <div>
-          {showMarkers && <Marker n={5} style={{ bottom: "-8px", left: "-12px" }} />}
-          <button className="kbtn btn btn--primary" onClick={onGoDetail}>
-            <span className="btn__label">{Ico.detail} 상세 보기</span>
+          {showMarkers && <Marker n={3} style={{ bottom: "-8px", left: "-12px" }} />}
+          <button className="kbtn btn btn--ghost" onClick={onGoMain}>
+            <span className="btn__label">{Ico.home} 메인으로</span>
             <span className="btn__chev">›</span>
           </button>
         </div>
         <div>
-          {showMarkers && <Marker n={3} style={{ bottom: "-8px", right: "-12px" }} />}
-          <button className="kbtn btn btn--ghost" onClick={onGoMain}>
-            <span className="btn__label">{Ico.home} 메인으로</span>
+          {showMarkers && <Marker n={5} style={{ bottom: "-8px", right: "-12px" }} />}
+          <button className="kbtn btn btn--primary" onClick={onGoPayment}>
+            <span className="btn__label">{Ico.pay} 결제하기</span>
             <span className="btn__chev">›</span>
           </button>
         </div>
