@@ -10,6 +10,9 @@
 전달 파일 내 scene2.html 를 참고해 주세요.
 
 
+
+```
+
 - 방향 전환 참고
 	좌측 마크 direction 아이콘 2가지 45도 방향 css 
 	#a4 {
@@ -23,36 +26,36 @@
 	}
 
 - 방향 화살표 이동 참고
-			코드1 
-				// direction 아이콘 이동 시작 위치
-				a4.style.transition = 'none';
-				a4.style.setProperty('--x', '0px');
-				a4.style.setProperty('--y', '113px');
+코드1 
+	// direction 아이콘 이동 시작 위치
+	a4.style.transition = 'none';
+	a4.style.setProperty('--x', '0px');
+	a4.style.setProperty('--y', '113px');
 
-			코드2
-				requestAnimationFrame(function () {
-					a4.style.transition =
-						'transform 0.8s ease-out';
-					a4.style.setProperty('--x', '0px');
-					a4.style.setProperty('--y', '0px');
-				});
-
-
-			코드3
-				// 다시 북동쪽 시작 위치
-				a4.style.transition = 'none';
-				a4.style.setProperty('--x', '0px');
-				a4.style.setProperty('--y', '113px');
-				a4.offsetHeight;
-
-			코드4
-				// 다시 최종 위치로 이동
-				requestAnimationFrame(function () {
-					a4.style.transition =
-						'transform 0.8s ease-out';
-					a4.style.setProperty('--x', '0px');
-					a4.style.setProperty('--y', '0px');
-				});
+코드2
+	requestAnimationFrame(function () {
+		a4.style.transition =
+			'transform 0.8s ease-out';
+		a4.style.setProperty('--x', '0px');
+		a4.style.setProperty('--y', '0px');
+	});
 
 
+코드3
+	// 다시 북동쪽 시작 위치
+	a4.style.transition = 'none';
+	a4.style.setProperty('--x', '0px');
+	a4.style.setProperty('--y', '113px');
+	a4.offsetHeight;
 
+코드4
+	// 다시 최종 위치로 이동
+	requestAnimationFrame(function () {
+		a4.style.transition =
+			'transform 0.8s ease-out';
+		a4.style.setProperty('--x', '0px');
+		a4.style.setProperty('--y', '0px');
+	});
+
+
+```
