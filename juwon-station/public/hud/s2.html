@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<style>
+	* {
+		box-sizing: border-box;
+	}
+
+	.html,
+	body {
+		margin: 0;
+		width: 100%;
+		height: 100%
+	}
+
+	.main {
+		width: 100%;
+		height: 100vh;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: #000;
+	}
+
+	.main>div {
+		width: 660px;
+		height: 600px;
+	}
+
+	.s_wrap {
+		width: 660px;
+		height: 600px;
+		position: relative;
+	}
+
+	.hud_animation {
+		position: absolute;
+		width: 660px;
+		height: 600px;
+		bottom: 230px;
+		right: 30px;
+	}
+
+	.hud_animation img {
+		position: absolute;
+		opacity: 0;
+		transition: opacity 0.8s ease-in-out;
+	}
+
+	.hud_animation img.show {
+		opacity: 1;
+	}
+
+	#a1 {
+		width: 405px;
+		left: 225px;
+		top: 405px;
+	}
+
+	/* 중앙 바*/
+	#a2 {
+		width: 60px;
+		left: 395px;
+		top: 610px;
+	}
+
+	/* 중앙 양 사이드 바*/
+	#a3 {
+		width: 240px;
+		left: 305px;
+		top: 580px;
+	}
+
+	/* 좌측 마크  */
+	#a4 {
+		width: 120px;
+		left: 225px;
+		top: 422px;
+		--x: 0px;
+		--y: 0px;
+		transform: rotate(45deg) translate(var(--x), var(--y));
+		/*45도 각도 */
+	}
+
+	/* 중앙 바*/
+	#a5 {
+		width: 60px;
+		left: 395px;
+		top: 610px;
+	}
+
+	/* 중앙 양 사이드 바*/
+	#a6 {
+		width: 240px;
+		left: 305px;
+		top: 580px;
+	}
+
+	/* 중앙 맨 끝 바*/
+	#a7 {
+		width: 387px;
+		left: 231px;
+		top: 572px;
+	}
+</style>
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+
+		const a1 = document.getElementById('a1');
+		const a2 = document.getElementById('a2');
+		const a3 = document.getElementById('a3');
+		const a4 = document.getElementById('a4');
+		const a5 = document.getElementById('a5');
+		const a6 = document.getElementById('a6');
+		const a7 = document.getElementById('a7');
+
+		let timers = [];
+
+		function playAnimation() {
+			// 기존 타이머 전부 제거
+			timers.forEach(clearTimeout);
+			timers = [];
+
+
+			// 초기화
+			a1.src = 'image/s2/hud_line.svg';
+			a2.src = 'image/s2/distance-normal-1.svg';
+			a3.src = 'image/s2/distance-normal-2.svg';
+			a4.src = 'image/s2/direction-normal.svg';
+
+			a1.classList.remove('show');
+			a2.classList.remove('show');
+			a3.classList.remove('show');
+			a4.classList.remove('show');
+			a5.classList.remove('show');
+			a6.classList.remove('show');
+			a7.classList.remove('show');
+
+			// 4번 이동 시작 위치
+			a4.style.transition = 'none';
+			a4.style.setProperty('--x', '0px');
+			a4.style.setProperty('--y', '113px');
+
+			timers.push(
+				setTimeout(function () {
+
+					a1.classList.add('show');
+					a2.classList.add('show');
+
+				}, 0)
+			);
+
+			timers.push(
+				setTimeout(function () {
+
+					a3.classList.add('show');
+
+				}, 1000)
+			);
+
+			timers.push(
+				setTimeout(function () {
+
+					a3.classList.remove('show');
+					a2.src = 'image/s2/distance-waring-1.svg';
+					a2.classList.add('show');
+					a4.src = 'image/s2/direction-normal.svg';
+
+					// 북동쪽 시작 위치
+					a4.style.transition = 'none';
+					a4.style.setProperty('--x', '0px');
+					a4.style.setProperty('--y', '113px');
+
+					a4.classList.add('show');
+					a4.offsetHeight;
+
+
+					requestAnimationFrame(function () {
+
+						a4.style.transition =
+							'transform 0.8s ease-out';
+						a4.style.setProperty('--x', '0px');
+						a4.style.setProperty('--y', '0px');
+
+					});
+
+					timers.push(
+						setTimeout(function () {
+							a4.src = 'image/s2/direction-warning.svg';
+							// 다시 북동쪽 시작 위치
+							a4.style.transition = 'none';
+							a4.style.setProperty('--x', '0px');
+							a4.style.setProperty('--y', '113px');
+							a4.offsetHeight;
+
+
+							// 다시 최종 위치로 이동
+							requestAnimationFrame(function () {
+								a4.style.transition =
+									'transform 0.8s ease-out';
+								a4.style.setProperty('--x', '0px');
+								a4.style.setProperty('--y', '0px');
+							});
+
+						}, 1300)
+					);
+
+					timers.push(
+						setTimeout(function () {
+							a6.classList.add('show');
+
+							timers.push(
+								setTimeout(function () {
+									a7.classList.add('show');
+								}, 1000)
+							);
+						}, 2000)
+					);
+				}, 2000)
+			);
+		}
+		playAnimation();
+	});
+</script>
+
+<body>
+	<div class="main">
+		<div>
+			<div class="s_wrap">
+				<div class="hud_animation">
+					<img src="image/s2/hud_line.svg" id="a1">
+					<img src="image/s2/distance-normal-1.svg" id="a2">
+					<img src="image/s2/distance-normal-2.svg" id="a3">
+					<img src="image/s2/direction-normal.svg" id="a4">
+					<img src="image/s2/distance-waring-1.svg" id="a5">
+					<img src="image/s2/distance-waring-2.svg" id="a6">
+					<img src="image/s2/distance-waring-3.svg" id="a7">
+				</div>
+			</div>
+		</div>
+</body>
+
+</html>

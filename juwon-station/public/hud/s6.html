@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<style>
+	* {
+		box-sizing: border-box;
+	}
+
+	.html,
+	body {
+		margin: 0;
+		width: 100%;
+		height: 100%
+	}
+
+	.main {
+		width: 100%;
+		height: 100vh;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: #000;
+	}
+
+	.main>div {
+		width: 660px;
+		height: 600px;
+	}
+
+	.s_wrap {
+		width: 660px;
+		height: 600px;
+		position: relative;
+	}
+
+	.hud_animation {
+		position: absolute;
+		width: 660px;
+		height: 600px;
+		bottom: 230px;
+		right: 30px;
+	}
+
+	.hud_animation img {
+		position: absolute;
+		opacity: 0;
+		transition: opacity 0.8s ease-in-out;
+	}
+
+	.hud_animation img.show {
+		opacity: 1;
+	}
+
+	/*기본 하늘색 상하 라인*/
+	#a1 {
+		width: 405px;
+		left: 225px;
+		top: 405px;
+	}
+
+	/* 중앙 바*/
+	#a2 {
+		width: 60px;
+		left: 395px;
+		top: 610px;
+	}
+
+
+	/* 좌측 자동차 */
+	#a3 {
+		width: 60px;
+		left: 230px;
+		top: 485px;
+	}
+
+	/* 우측 자동차 */
+	#a4 {
+		width: 60px;
+		right: 30px;
+		top: 485px;
+		transform: scaleX(-1);
+	}
+
+	/* 중앙 경고등 */
+	#a5 {
+		width: 70px;
+		left: 389px;
+		top: 485px;
+	}
+
+
+	/* 중앙 바*/
+	#a5_1 {
+		width: 60px;
+		left: 395px;
+		top: 610px;
+	}
+
+	/* 중앙 양 사이드 바*/
+	#a6 {
+		width: 240px;
+		left: 305px;
+		top: 580px;
+	}
+
+	/* 중앙 맨 끝 바*/
+	#a7 {
+		width: 387px;
+		left: 231px;
+		top: 572px;
+	}
+</style>
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+
+		const a1 = document.getElementById('a1');
+		const a2 = document.getElementById('a2');
+		const a3 = document.getElementById('a3');
+		const a4 = document.getElementById('a4');
+		const a5 = document.getElementById('a5');
+		const a6 = document.getElementById('a6');
+		const a7 = document.getElementById('a7');
+
+		let timers = [];
+		// 5번 깜빡임 전용 타이머
+		let blinkA5Timer = null;
+
+		function playAnimation() {
+			// 기존 타이머 정리
+			timers.forEach(clearTimeout);
+			timers = [];
+
+			if (blinkA5Timer) {
+				clearTimeout(blinkA5Timer);
+				blinkA5Timer = null;
+			}
+
+			// 초기화
+			a1.classList.remove('show');
+			a2.classList.remove('show');
+			a3.classList.remove('show');
+			a4.classList.remove('show');
+			a5.classList.remove('show');
+			a6.classList.remove('show');
+			a7.classList.remove('show');
+
+			// 5번 초기화
+			a5.style.transform = 'scale(1)';
+			a5.style.transition = 'none';
+
+			timers.push(setTimeout(function () {
+				a1.classList.add('show');
+				a2.classList.add('show');
+			}, 0));
+
+			timers.push(setTimeout(function () {
+
+				a3.classList.add('show');
+				let count3 = 0;
+
+				function blinkA3() {
+					a3.classList.toggle('show');
+					count3++;
+
+					if (count3 < 6) {
+						timers.push(
+							setTimeout(blinkA3, 500)
+						);
+					} else {
+						a3.classList.add('show');
+						a4.classList.add('show');
+						let count4 = 0;
+
+						function blinkA4() {
+							a4.classList.toggle('show');
+							count4++;
+							if (count4 < 6) {
+								timers.push(
+									setTimeout(blinkA4, 500)
+								);
+							} else {
+								a4.classList.add('show');
+								startStep2();
+							}
+						}
+						blinkA4();
+					}
+				}
+				blinkA3();
+			}, 1000));
+
+
+			function startStep2() {
+				a5.style.transform = 'scale(1)';
+				a5.style.transition = 'none';
+				a5.classList.add('show');
+
+				function blinkA5() {
+					a5.classList.toggle('show');
+					blinkA5Timer = setTimeout(blinkA5, 600);
+				}
+				timers.push(
+					setTimeout(function () {
+						blinkA5();
+					}, 700)
+				);
+
+				timers.push(
+					setTimeout(function () {
+						a2.src = 'image/s6/distance-waring-1.svg';
+						a6.classList.add('show');
+						timers.push(
+							setTimeout(function () {
+								a7.classList.add('show');
+								startStep3();
+							}, 500)
+						);
+					}, 1500)
+				);
+			}
+
+			function startStep3() {
+				timers.push(
+					setTimeout(function () {
+
+						timers.push(
+							setTimeout(function () {
+								// 5번 깜빡임 완전히 중지
+								if (blinkA5Timer) {
+									clearTimeout(blinkA5Timer);
+									blinkA5Timer = null;
+								}
+
+								// 8번은 계속 표시
+								a5.classList.add('show');
+								a5.src = 'image/s6/braking-critical.svg';
+
+								timers.push(
+									setTimeout(function () {
+										a2.src = 'image/s6/distance-critical-1.svg';
+										timers.push(
+											setTimeout(function () {
+												a6.src = 'image/s6/distance-critical-2.svg';
+
+												// 양쪽 차 없애는 타이밍 오른쪽 차부터
+												a6.onload = function () {
+													a4.classList.remove('show');
+													setTimeout(function () {
+														a3.classList.remove('show');
+													}, 250);
+
+												};
+												timers.push(
+													setTimeout(function () {
+														a7.src = 'image/s6/distance-critical-3.svg';
+													}, 1000)
+												);
+											}, 1000)
+										);
+									}, 1000)
+								);
+							}, 1000)
+						);
+					}, 1000)
+				);
+			}
+		}
+		playAnimation();
+	});
+</script>
+
+<body>
+	<div class="main">
+		<div>
+			<div class="s_wrap">
+				<div class="hud_animation">
+					<img src="image/s6/hud_line.svg" id="a1">
+					<img src="image/s6/distance-normal-1.svg" id="a2">
+					<img src="image/s6/side-traffic.svg" id="a3">
+					<img src="image/s6/side-traffic.svg" id="a4">
+					<img src="image/s6/braking-warning.svg" id="a5">
+					<img src="image/s6/distance-waring-2.svg" id="a6">
+					<img src="image/s6/distance-waring-3.svg" id="a7">
+				</div>
+			</div>
+		</div>
+</body>
+
+</html>

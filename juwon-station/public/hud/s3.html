@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<style>
+	* {
+		box-sizing: border-box;
+	}
+
+	.html,
+	body {
+		margin: 0;
+		width: 100%;
+		height: 100%
+	}
+
+	.main {
+		width: 100%;
+		height: 100vh;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: #000;
+	}
+
+	.main>div {
+		width: 660px;
+		height: 600px;
+	}
+
+	.s_wrap {
+		width: 660px;
+		height: 600px;
+		position: relative;
+	}
+
+	.hud_animation {
+		position: absolute;
+		width: 660px;
+		height: 600px;
+		bottom: 230px;
+		right: 30px;
+	}
+
+	.hud_animation img {
+		position: absolute;
+		opacity: 0;
+		transition: opacity 0.8s ease-in-out;
+	}
+
+	.hud_animation img.show {
+		opacity: 1;
+	}
+
+	/* 위아래 하늘색*/
+	#a1 {
+		width: 405px;
+		left: 225px;
+		top: 405px;
+	}
+
+
+	/* 중앙 바*/
+	#a2 {
+		width: 60px;
+		left: 395px;
+		top: 610px;
+	}
+
+	/* 중앙 양 사이드 바*/
+	#a3 {
+		width: 240px;
+		left: 305px;
+		top: 580px;
+	}
+
+	/* 중앙 맨 끝 바*/
+	#a4 {
+		width: 387px;
+		left: 231px;
+		top: 572px;
+	}
+
+	/* 좌측 마크  */
+	#a4_1 {
+		width: 120px;
+		left: 225px;
+		top: 422px;
+		transform: rotate(45deg);
+	}
+
+	/* hv 노말 마크  */
+	#a9 {
+		width: 45px;
+		left: 370px;
+		top: 547px;
+	}
+</style>
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const a1 = document.getElementById('a1');
+		const a2 = document.getElementById('a2');
+		const a3 = document.getElementById('a3');
+		const a4 = document.getElementById('a4');
+		const a4_1 = document.getElementById('a4_1');
+		const a9 = document.getElementById('a9');
+
+		let timers = [];
+
+		function playAnimation() {
+
+			// 기존 타이머 제거
+			timers.forEach(clearTimeout);
+			timers = [];
+
+			a1.classList.remove('show');
+			a2.classList.remove('show');
+			a3.classList.remove('show');
+			a4.classList.remove('show');
+			a4_1.classList.remove('show');
+			a9.classList.remove('show');
+
+			a2.src = 'image/s3/distance-waring-1.svg';
+			a3.src = 'image/s3/distance-waring-2.svg';
+			a4.src = 'image/s3/distance-waring-3.svg';
+			a4_1.src = 'image/s3/direction-warning.svg';
+			a9.src = 'image/s3/hv-normal.svg';
+
+			timers.push(
+				setTimeout(function () {
+
+					a1.classList.add('show');
+					a2.classList.add('show');
+
+				}, 0)
+			);
+			timers.push(
+				setTimeout(function () {
+
+					a4_1.classList.add('show');
+					let countA4_1 = 0;
+
+
+					function blinkA4_1() {
+						a4_1.classList.toggle('show');
+						countA4_1++;
+
+						if (countA4_1 < 6) {
+							timers.push(
+								setTimeout(blinkA4_1, 500)
+							);
+
+						} else {
+							a4_1.classList.add('show');
+
+						}
+					}
+
+					timers.push(
+						setTimeout(blinkA4_1, 500)
+					);
+
+					timers.push(
+						setTimeout(function () {
+
+							a9.classList.add('show');
+
+						}, 1000)
+					);
+
+					timers.push(
+						setTimeout(function () {
+
+							// 3번 등장
+							a3.classList.add('show');
+
+
+							// 0.2초 후 4번 등장
+							timers.push(
+								setTimeout(function () {
+
+									a4.classList.add('show');
+
+								}, 1000)
+							);
+
+						}, 2000)
+					);
+
+					timers.push(
+						setTimeout(function () {
+
+							startStep6();
+
+						}, 4000)
+					);
+
+				}, 0)
+			);
+
+			function startStep6() {
+
+				a9.src = 'image/s3/hv-critical.svg';
+				a9.classList.add('show');
+
+				a2.src = 'image/s3/distance-critical-1.svg';
+				a2.classList.add('show');
+
+				timers.push(
+					setTimeout(function () {
+
+						startA8();
+
+					}, 150)
+				);
+
+				timers.push(
+					setTimeout(function () {
+
+						startA6();
+
+					}, 1000)
+				);
+
+			}
+
+			function startA8() {
+				a4_1.src = 'image/s3/direction-critical.svg';
+				a4_1.classList.add('show');
+
+
+				let countA8 = 0;
+
+
+				function blinkA8() {
+					a4_1.classList.toggle('show');
+					countA8++;
+
+					if (countA8 < 4) {
+
+						timers.push(
+							setTimeout(blinkA8, 400)
+						);
+
+					} else {
+						a4_1.classList.add('show');
+
+					}
+				}
+				timers.push(
+					setTimeout(blinkA8, 200)
+				);
+
+			}
+
+
+			function startA6() {
+
+				a3.src = 'image/s3/distance-critical-2.svg';
+				a3.classList.add('show');
+				timers.push(
+					setTimeout(function () {
+
+						startA7();
+
+					}, 1000)
+				);
+
+			}
+
+			function startA7() {
+				a4.src = 'image/s3/distance-critical-3.svg';
+				a4.classList.add('show');
+
+			}
+
+		}
+		playAnimation();
+
+	});
+</script>
+
+<body>
+	<div class="main">
+		<div>
+			<div class="s_wrap">
+				<div class="hud_animation">
+					<img src="image/s3/hud_line.svg" id="a1">
+					<img src="image/s3/distance-waring-1.svg" id="a2">
+					<img src="image/s3/distance-waring-2.svg" id="a3">
+					<img src="image/s3/distance-waring-3.svg" id="a4">
+					<img src="image/s3/direction-warning.svg" id="a4_1">
+					<img src="image/s3/hv-normal.svg" id="a9">
+				</div>
+			</div>
+		</div>
+</body>
+
+</html>

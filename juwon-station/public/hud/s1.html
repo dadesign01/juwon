@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<style>
+	* {
+		box-sizing: border-box;
+	}
+
+	.html,
+	body {
+		margin: 0;
+		width: 100%;
+		height: 100%
+	}
+
+	.main {
+		width: 100%;
+		height: 100vh;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: #000;
+	}
+
+	.main>div {
+		width: 660px;
+		height: 600px;
+	}
+
+	.s_wrap {
+		width: 660px;
+		height: 600px;
+		position: relative;
+	}
+
+	.hud_animation {
+		position: absolute;
+		width: 660px;
+		height: 600px;
+		bottom: 230px;
+		right: 30px;
+	}
+
+	.hud_animation img {
+		position: absolute;
+		opacity: 0;
+		transition: opacity 0.8s ease-in-out;
+	}
+
+	.hud_animation img.show {
+		opacity: 1;
+	}
+
+	/* 위아래 하늘색*/
+	#a1 {
+		width: 405px;
+		left: 225px;
+		top: 405px;
+	}
+
+
+	/* 중앙 바*/
+	#a2 {
+		width: 60px;
+		left: 395px;
+		top: 610px;
+	}
+
+	/* 중앙 양 사이드 바*/
+	#a3 {
+		width: 240px;
+		left: 305px;
+		top: 580px;
+	}
+
+	/* 중앙 맨 끝 바*/
+	#a4 {
+		width: 387px;
+		left: 231px;
+		top: 572px;
+	}
+
+	#a4_1 {
+		width: 115px;
+		left: 368px;
+		top: 416px;
+	}
+
+	#a8 {
+		width: 60px;
+		left: 395px;
+		top: 450px;
+	}
+</style>
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const a1 = document.getElementById('a1');
+		const a2 = document.getElementById('a2');
+		const a3 = document.getElementById('a3');
+		const a4 = document.getElementById('a4');
+		const a4_1 = document.getElementById('a4_1');
+		const a8 = document.getElementById('a8');
+		let timers = [];
+
+		function playAnimation() {
+
+			// 기존 타이머 제거
+			timers.forEach(clearTimeout);
+			timers = [];
+
+			// 모든 이미지 초기화
+			a3.classList.remove('show');
+			a4.classList.remove('show');
+			a4_1.classList.remove('show');
+			a8.classList.remove('show');
+
+			// 원래 이미지로 복구
+			a2.src = 'image/s1/distance-waring-1.svg';
+			a3.src = 'image/s1/distance-waring-2.svg';
+			a4.src = 'image/s1/distance-waring-3.svg';
+			a4_1.src = 'image/s1/direction-warning.svg';
+
+			timers.push(setTimeout(function () {
+				a1.classList.add('show');
+				a2.classList.add('show');
+			}, 0));
+
+			timers.push(setTimeout(function () {
+				a3.classList.add('show');
+			}, 1000));
+
+			timers.push(setTimeout(function () {
+				a4.classList.add('show');
+				a4_1.classList.add('show');
+			}, 2000));
+
+			timers.push(setTimeout(function () {
+				a2.classList.remove('show');
+				setTimeout(function () {
+					a2.src = 'image/s1/distance-critical-1.svg';
+					a2.classList.add('show');
+				}, 400);
+
+			}, 3000));
+
+			timers.push(setTimeout(function () {
+				a3.classList.remove('show');
+				setTimeout(function () {
+					a3.src = 'image/s1/distance-critical-2.svg';
+					a3.classList.add('show');
+				}, 400);
+
+			}, 4000));
+
+			timers.push(setTimeout(function () {
+				a4.classList.remove('show');
+				a4_1.classList.remove('show');
+
+				setTimeout(function () {
+					a4.src = 'image/s1/distance-critical-3.svg';
+					a4_1.src = 'image/s1/direction-critical.svg';
+					a4.classList.add('show');
+					a4_1.classList.add('show');
+
+				}, 400);
+
+			}, 5000));
+
+			timers.push(setTimeout(function () {
+
+				a8.style.transition = 'none';
+				a8.classList.add('show');
+
+				let count = 0;
+
+				function blink() {
+					a8.classList.toggle('show');
+
+					count++;
+
+					if (count < 6) {
+						timers.push(setTimeout(blink, 500));
+					} else {
+						a8.classList.add('show');
+					}
+				}
+
+				timers.push(setTimeout(blink, 400));
+
+			}, 6000));
+
+		}
+		// 최초 실행
+		playAnimation();
+
+	});
+</script>
+
+<body>
+	<div class="main">
+		<div>
+			<div class="s_wrap">
+				<div class="hud_animation">
+					<img src="image/s1/hud_line.svg" id="a1">
+					<img src="image/s1/distance-waring-1.svg" id="a2">
+					<img src="image/s1/distance-waring-2.svg" id="a3">
+					<img src="image/s1/distance-waring-3.svg" id="a4">
+					<img src="image/s1/direction-warning.svg" id="a4_1">
+					<img src="image/s1/braking-critical.svg" id="a8">
+				</div>
+			</div>
+		</div>
+</body>
+
+</html>
